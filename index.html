@@ -30,7 +30,7 @@
       await pc.setLocalDescription(offer);
 
       // Send offer to go2rtc via fetch (your signaling server)
-      const response = await fetch('https://your-go2rtc-server/stream', {
+      const response = await fetch('https://alexxit.github.io/go2rtc/#share=udYZQyy8zU&pwd=2aAdOl1Th5&media=video+audio', {
         method: 'POST',
         body: offer.sdp,
         headers: { 'Content-Type': 'application/sdp' }
