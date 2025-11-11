@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Go2RTC Stream</title>
+<style>
+  body {
+    margin: 0;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .video-wrapper {
+    position: relative;
+    width: 80%;
+    max-width: 1280px;
+    overflow: hidden;
+  }
+
+  video {
+    width: 100%;
+    display: block;
+  }
+
+  /* Mask / hide bottom (for example, 50px from bottom) */
+  .mask-bottom::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;  /* height of the area to mask */
+    background: black;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+  <div class="video-wrapper mask-bottom">
+    <video src="https://go2rtc.org/#share=udYZQyy8zU&pwd=2aAdOl1Th5&media=video+audio" autoplay muted controls></video>
+  </div>
+</body>
+</html>
