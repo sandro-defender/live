@@ -2,44 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Go2RTC WebRTC Stream</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Embedded go2rtc</title>
 <style>
   body { margin:0; background:#000; display:flex; justify-content:center; align-items:center; height:100vh; }
-  #video { width:80%; max-width:1280px; }
+  iframe { width: 80%; max-width: 1280px; height: 720px; border: none; }
 </style>
 </head>
 <body>
-  <video id="video" autoplay playsinline></video>
-
-  <script>
-    async function startStream() {
-      // Replace with your actual go2rtc WebRTC URL (without #share)
-      const pc = new RTCPeerConnection();
-
-      // When remote stream arrives, attach to <video>
-      pc.ontrack = (event) => {
-        const video = document.getElementById('video');
-        video.srcObject = event.streams[0];
-      };
-
-      // Create a data channel if needed
-      pc.createDataChannel('dummy');
-
-      // Create an offer
-      const offer = await pc.createOffer();
-      await pc.setLocalDescription(offer);
-
-      // Send offer to go2rtc via fetch (your signaling server)
-      const response = await fetch('https://alexxit.github.io/go2rtc/#share=udYZQyy8zU&pwd=2aAdOl1Th5&media=video+audio', {
-        method: 'POST',
-        body: offer.sdp,
-        headers: { 'Content-Type': 'application/sdp' }
-      });
-      const answerSdp = await response.text();
-      await pc.setRemoteDescription({ type: 'answer', sdp: answerSdp });
-    }
-
-    startStream();
-  </script>
+  <iframe src="https://alexxit.github.io/go2rtc/#share=udYZQyy8zU&pwd=2aAdOl1Th5&media=video+audio"></iframe>
 </body>
 </html>
