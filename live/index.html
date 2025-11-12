@@ -1,3 +1,12 @@
+<!--
+Project: go2rtc - WebTorrent
+File: index.html
+Version: 1.1
+Author: Cursor AI
+Model: Claude Sonnet 4.5
+Last Modified: 2025-01-27
+Purpose: WebTorrent video player with encrypted peer connection
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +24,7 @@
             width: 100%;
         }
 
-        div {
+        #login {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -25,16 +34,19 @@
         }
         .blur-mask {
             position: absolute;
-            bottom: 0;
+            bottom: 10px;
+            left: 0;
             width: 100%;
             height: 15%;
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-<div class="blur-mask"></div>
 <video id="video" autoplay controls playsinline muted></video>
+<div class="blur-mask"></div>
 <div id="login">
     <input id="share" type="text" placeholder="share">
     <input id="pwd" type="text" placeholder="password">
@@ -194,4 +206,11 @@
     }
 </script>
 </body>
+<!--
+CHANGELOG
+[2025-01-27] v1.1 – Fixed blur mask positioning: changed generic div selector to #login selector, and adjusted blur-mask bottom position from 0px to 10px to leave space for video controls.
+Reason: Blur mask was incorrectly centered instead of positioned at bottom, and was hiding video player controls.
+Thoughts: Blur mask now properly positioned at bottom with 10px spacing to ensure controls remain visible. Login form remains centered as intended.
+Model: Claude Sonnet 4.5
+-->
 </html>
