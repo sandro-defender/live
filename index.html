@@ -47,27 +47,6 @@
       background:#000;
     }
 
-    /* blurred overlay at bottom */
-    .bottom-blur {
-      pointer-events:none; /* allow clicks through to iframe */
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:0;
-      height:var(--overlay-height-percent);
-      /* gradient to make the blur smooth */
-      background: linear-gradient(to top, rgba(0,0,0,0.45), rgba(0,0,0,0.15) 40%, transparent);
-      /* blur the content behind the overlay (modern browsers) */
-      backdrop-filter: blur(8px) saturate(1.1);
-      -webkit-backdrop-filter: blur(8px) saturate(1.1);
-    }
-
-    /* fallback for browsers that don't support backdrop-filter: use semi-opaque black */
-    @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-      .bottom-blur {
-        background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.2) 40%, transparent);
-      }
-    }
 
     /* small UI at top-left for info */
     .meta {
@@ -102,7 +81,6 @@
       <iframe id="viewer" allow="autoplay; camera; microphone; fullscreen"
         src="https://live.you.ge/live/index.html#share=fBEmrHJtd7&pwd=xXk9ZHHhF6&media=video+audio">
       </iframe>
-      <div class="bottom-blur" aria-hidden="true"></div>
     </div>
   </div>
 </body>
