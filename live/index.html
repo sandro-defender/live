@@ -218,6 +218,78 @@
         document.getElementById('login').style.display = 'none'
     }
 
+    function requestFullscreen(element) {
+        if (!element) return Promise.resolve()
+        if (element.requestFullscreen) return element.requestFullscreen()
+        if (element.webkitRequestFullscreen) return element.webkitRequestFullscreen()
+        if (element.msRequestFullscreen) return element.msRequestFullscreen()
+        return Promise.resolve()
+    }
+
+    function exitFullscreen() {
+        if (document.exitFullscreen) return document.exitFullscreen()
+        if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen()
+            return Promise.resolve()
+        }
+        if (document.msExitFullscreen) return document.msExitFullscreen()
+        return Promise.resolve()
+    }
+
+    function getFullscreenElement() {
+        return document.fullscreenElement
+            || document.webkitFullscreenElement
+            || document.msFullscreenElement
+    }
+
+    let switchingFullscreen = false
+
+    async function ensureContainerFullscreen() {
+        if (switchingFullscreen) return
+
+        const video = document.getElementById('video')
+        const container = document.getElementById('video-container')
+
+        if (!video || !container) return
+
+        const currentFullscreen = getFullscreenElement()
+
+        if (currentFullscreen === container) {
+            return
+        }
+
+        switchingFullscreen = true
+        try {
+            if (currentFullscreen && currentFullscreen !== container) {
+                await exitFullscreen()
+            }
+            if (getFullscreenElement() !== container) {
+                await requestFullscreen(container)
+            }
+        } catch (err) {
+            console.warn('Failed to switch fullscreen element', err)
+        } finally {
+            switchingFullscreen = false
+            requestAnimationFrame(updateBlurMask)
+        }
+    }
+
+    function handleFullscreenChange() {
+        const video = document.getElementById('video')
+        if (!video) return
+
+        const currentFullscreen = getFullscreenElement()
+        if (currentFullscreen === video) {
+            ensureContainerFullscreen()
+        } else {
+            requestAnimationFrame(updateBlurMask)
+        }
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
+    document.addEventListener('msfullscreenchange', handleFullscreenChange)
+
     // Position blur mask to cover only video player bottom 15%
     function updateBlurMask() {
         const video = document.getElementById('video')
@@ -267,6 +339,8 @@
         video.addEventListener('loadedmetadata', updateBlurMask)
         video.addEventListener('loadeddata', updateBlurMask)
         video.addEventListener('canplay', updateBlurMask)
+        video.addEventListener('webkitbeginfullscreen', ensureContainerFullscreen)
+        video.addEventListener('webkitendfullscreen', updateBlurMask)
         // Also update when video or container dimensions change
         const observer = new ResizeObserver(updateBlurMask)
         observer.observe(video)
