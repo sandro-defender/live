@@ -1,7 +1,7 @@
 <!--
 Project: go2rtc - WebTorrent
 File: index.html
-Version: 1.1
+Version: 1.2
 Author: Cursor AI
 Model: Claude Sonnet 4.5
 Last Modified: 2025-01-27
@@ -19,34 +19,56 @@ Purpose: WebTorrent video player with encrypted peer connection
             padding: 0;
         }
 
-        html, body, video {
+        html, body {
             height: 100%;
             width: 100%;
+            overflow: hidden;
+        }
+
+        #video-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
         }
 
         #login {
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             display: flex;
             flex-direction: column;
             transform: translateX(-50%) translateY(-50%);
+            z-index: 10;
         }
+
         .blur-mask {
             position: absolute;
             bottom: 10px;
             left: 0;
+            right: 0;
             width: 100%;
             height: 15%;
+            min-height: 60px;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             pointer-events: none;
+            z-index: 5;
         }
     </style>
 </head>
 <body>
-<video id="video" autoplay controls playsinline muted></video>
-<div class="blur-mask"></div>
+<div id="video-container">
+    <video id="video" autoplay controls playsinline muted></video>
+    <div class="blur-mask"></div>
+</div>
 <div id="login">
     <input id="share" type="text" placeholder="share">
     <input id="pwd" type="text" placeholder="password">
@@ -211,6 +233,11 @@ CHANGELOG
 [2025-01-27] v1.1 – Fixed blur mask positioning: changed generic div selector to #login selector, and adjusted blur-mask bottom position from 0px to 10px to leave space for video controls.
 Reason: Blur mask was incorrectly centered instead of positioned at bottom, and was hiding video player controls.
 Thoughts: Blur mask now properly positioned at bottom with 10px spacing to ensure controls remain visible. Login form remains centered as intended.
+Model: Claude Sonnet 4.5
+
+[2025-01-27] v1.2 – Fixed blur mask coverage: wrapped video and blur mask in container div, set container to 100vw/100vh with overflow hidden, and ensured blur mask properly covers video area on window resize.
+Reason: Blur mask was not properly covering video player area when window was resized, allowing full video stream to be visible.
+Thoughts: Container-based approach ensures blur mask is always positioned relative to video container. Container uses 100vw/100vh to fill viewport completely. Video uses object-fit: contain to show full video without cropping. Blur mask positioned absolutely at bottom: 10px with left: 0 and right: 0 to cover full width. Added min-height to blur mask for better coverage on smaller screens. Changed login to fixed positioning for better overlay behavior. Overflow hidden on container prevents scrollbars.
 Model: Claude Sonnet 4.5
 -->
 </html>
