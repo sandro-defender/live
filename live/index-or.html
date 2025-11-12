@@ -1,12 +1,3 @@
-<!--
-Project: go2rtc - WebTorrent
-File: index.html
-Version: 1.3
-Author: Cursor AI
-Model: Claude Sonnet 4.5
-Last Modified: 2025-01-27
-Purpose: WebTorrent video player with encrypted peer connection
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,56 +10,23 @@ Purpose: WebTorrent video player with encrypted peer connection
             padding: 0;
         }
 
-        html, body {
+        html, body, video {
             height: 100%;
             width: 100%;
-            overflow: hidden;
         }
 
-        #video-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        video {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            display: block;
-            position: relative;
-        }
-
-        #login {
-            position: fixed;
+        div {
+            position: absolute;
             top: 50%;
             left: 50%;
             display: flex;
             flex-direction: column;
             transform: translateX(-50%) translateY(-50%);
-            z-index: 10;
-        }
-
-        .blur-mask {
-            position: absolute;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            pointer-events: none;
-            z-index: 5;
         }
     </style>
 </head>
 <body>
-<div id="video-container">
-    <video id="video" autoplay controls playsinline muted></video>
-    <div class="blur-mask"></div>
-</div>
+<video id="video" autoplay controls playsinline muted></video>
 <div id="login">
     <input id="share" type="text" placeholder="share">
     <input id="pwd" type="text" placeholder="password">
@@ -226,80 +184,6 @@ Purpose: WebTorrent video player with encrypted peer connection
         connect(share, pwd, media, tracker)
         document.getElementById('login').style.display = 'none'
     }
-
-    // Position blur mask to cover only video player bottom 15%
-    function updateBlurMask() {
-        const video = document.getElementById('video')
-        const blurMask = document.querySelector('.blur-mask')
-        const container = document.getElementById('video-container')
-        
-        if (!video || !blurMask || !container) return
-        
-        // Get actual rendered dimensions of video element
-        const videoRect = video.getBoundingClientRect()
-        const containerRect = container.getBoundingClientRect()
-        
-        // Skip if video hasn't loaded yet
-        if (videoRect.width === 0 || videoRect.height === 0) {
-            return
-        }
-        
-        // Blur mask should match video width and be 15% of video height
-        const blurWidth = videoRect.width
-        const blurHeight = videoRect.height * 0.20
-        
-        // Calculate position: bottom of video minus 10px for controls
-        // Position relative to container
-        const videoBottom = containerRect.height - (videoRect.bottom - containerRect.top)
-        const videoLeft = videoRect.left - containerRect.left
-        
-        blurMask.style.width = blurWidth + 'px'
-        blurMask.style.height = blurHeight + 'px'
-        blurMask.style.left = videoLeft + 'px'
-        blurMask.style.bottom = (videoBottom - 10) + 'px'
-        blurMask.style.top = 'auto'
-        blurMask.style.right = 'auto'
-        blurMask.style.transform = 'none'
-    }
-    
-    // Update blur mask on resize and when video loads
-    let resizeTimeout
-    function debouncedUpdateBlurMask() {
-        clearTimeout(resizeTimeout)
-        resizeTimeout = setTimeout(updateBlurMask, 50)
-    }
-    
-    window.addEventListener('resize', debouncedUpdateBlurMask)
-    const video = document.getElementById('video')
-    const container = document.getElementById('video-container')
-    if (video && container) {
-        video.addEventListener('loadedmetadata', updateBlurMask)
-        video.addEventListener('loadeddata', updateBlurMask)
-        video.addEventListener('canplay', updateBlurMask)
-        // Also update when video or container dimensions change
-        const observer = new ResizeObserver(updateBlurMask)
-        observer.observe(video)
-        observer.observe(container)
-        // Initial update
-        setTimeout(updateBlurMask, 200)
-    }
 </script>
 </body>
-<!--
-CHANGELOG
-[2025-01-27] v1.1 – Fixed blur mask positioning: changed generic div selector to #login selector, and adjusted blur-mask bottom position from 0px to 10px to leave space for video controls.
-Reason: Blur mask was incorrectly centered instead of positioned at bottom, and was hiding video player controls.
-Thoughts: Blur mask now properly positioned at bottom with 10px spacing to ensure controls remain visible. Login form remains centered as intended.
-Model: Claude Sonnet 4.5
-
-[2025-01-27] v1.2 – Fixed blur mask coverage: wrapped video and blur mask in container div, set container to 100vw/100vh with overflow hidden, and ensured blur mask properly covers video area on window resize.
-Reason: Blur mask was not properly covering video player area when window was resized, allowing full video stream to be visible.
-Thoughts: Container-based approach ensures blur mask is always positioned relative to video container. Container uses 100vw/100vh to fill viewport completely. Video uses object-fit: contain to show full video without cropping. Blur mask positioned absolutely at bottom: 10px with left: 0 and right: 0 to cover full width. Added min-height to blur mask for better coverage on smaller screens. Changed login to fixed positioning for better overlay behavior. Overflow hidden on container prevents scrollbars.
-Model: Claude Sonnet 4.5
-
-[2025-01-27] v1.3 – Fixed blur mask to cover only video player area: changed video container to use flexbox centering, updated video sizing to use auto width/height with max constraints, and implemented JavaScript to dynamically calculate and position blur mask based on video's actual rendered dimensions.
-Reason: Blur mask was covering entire page instead of only the video player bottom 15% area. Need to cover only the visible video content area, not black bars or empty container space.
-Thoughts: Using getBoundingClientRect() to get video's actual rendered dimensions accounts for object-fit: contain behavior. JavaScript calculates blur mask width to match video width and height to be 15% of video height. Positioned absolutely relative to container, aligned with video's left edge and bottom edge (minus 10px for controls). Added ResizeObserver to update blur mask when video or container dimensions change. Debounced resize handler for performance. Blur mask now only covers the actual video content area, not the entire page.
-Model: Claude Sonnet 4.5
--->
 </html>
