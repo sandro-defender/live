@@ -2,4 +2,4 @@
 #/*    /index.html   200
 
 # Route redirects from original Apache config
-/l1    /live/#share=rC10tDigEa&pwd=yjgA2P00k1&media=video+audio    200
+/l1    /live/index.html#share=rC10tDigEa&pwd=yjgA2P00k1&media=video+audio    200
