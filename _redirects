@@ -1,0 +1,5 @@
+# Handle client-side routing
+#/*    /index.html   200
+
+# Route redirects from original Apache config
+/l1    /live/#share=rC10tDigEa&pwd=yjgA2P00k1&media=video+audio    200
